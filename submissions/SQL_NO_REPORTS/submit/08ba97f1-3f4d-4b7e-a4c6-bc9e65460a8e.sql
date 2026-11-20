@@ -1,0 +1,1 @@
+SELECT t.name FROM teams t WHERE NOT EXISTS (SELECT 1 FROM reports r WHERE r.team_id = t.id)
