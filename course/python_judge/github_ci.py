@@ -17,13 +17,15 @@ def identify(worktree, sha):
     if len(changes) != 3 or changes[0] != b"A" or changes[2]:
         raise ValueError("Expected one added submission")
     path = changes[1].decode("ascii")
-    match = re.fullmatch(r"submissions/([A-Z0-9_]+)/(examples|submit)/([0-9a-f-]{36})\.py", path)
+    match = re.fullmatch(r"submissions/([A-Z0-9_]+)/(examples|submit)/([0-9a-f-]{36})\.(py|sql)", path)
     if not match:
         raise ValueError("Unexpected submission path")
-    key, mode, identifier = match.groups()
+    key, mode, identifier, extension = match.groups()
     if str(UUID(identifier)) != identifier:
         raise ValueError("Invalid submission identity")
     task = get_task(worktree / "course", key)
+    if Path(task.filename).suffix != "." + extension:
+        raise ValueError("Unexpected submission language")
     return path, task, mode, identifier
 
 

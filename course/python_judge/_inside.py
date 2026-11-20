@@ -37,7 +37,8 @@ def main():
             path.write_text(body, encoding="utf-8")
         rows = []
         try:
-            compile(payload["files"][payload["filename"]], payload["filename"], "exec")
+            if payload["filename"].endswith(".py"):
+                compile(payload["files"][payload["filename"]], payload["filename"], "exec")
         except (SyntaxError, ValueError) as exc:
             message = short_error("".join(traceback.format_exception_only(type(exc), exc)))
             rows = [{"name": n, "passed": False, "message": message} for n in payload["names"]]
