@@ -13,6 +13,7 @@ def run_query(tables, columns, ordered, expected):
             if rows:
                 slots = ", ".join("?" for value in rows[0])
                 db.executemany(f"INSERT INTO {name} VALUES ({slots})", rows)
+        db.commit()
         db.execute("PRAGMA query_only = ON")
         def authorize(action, arg1, arg2, database, trigger):
             readable = action == sqlite3.SQLITE_READ and database == "main" and arg1 in tables
